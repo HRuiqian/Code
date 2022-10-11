@@ -93,11 +93,8 @@
             "size": 15
           },
           "encoding": {
-            "opacity": {
-              "condition": {
-                "param": "highlight",
-                "value": 1
-              },
+            "fillOpacity": {
+              "condition": {"param": "highlight", "value": 1},
               "value": 0.5
             },
             "tooltip": [
@@ -118,14 +115,12 @@
         {
           "mark": {
             "type": "circle",
-            "size": 500
+            "size": 500,
+            "opacity": 1
           },
           "encoding": {
-            "opacity": {
-              "condition": {
-                "param": "highlight",
-                "value": 1
-              },
+            "fillOpacity": {
+              "condition": {"param": "highlight", "value": 1},
               "value": 0.5
             },
             "tooltip": [
@@ -333,7 +328,7 @@
       ]
     },
     {
-      "width": 900,
+      "width": 915,
       "height": 60,
       "layer": [
         {

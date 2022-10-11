@@ -311,7 +311,7 @@
           "encoding": {
             "opacity": {
               "condition": {
-                "test": "datum.state == 'Labuan' || datum.state == 'Putrajaya'",
+                "test": "datum.state == 'Labuan' || datum.state == 'Putrajaya'|| datum.state == 'Selangor'|| datum.state == 'Sabah'|| datum.state == 'Sarawak'|| datum.state == 'Johor'|| datum.state == 'Kelantan'",
                 "value": 1
               },
               "value": 0
@@ -333,7 +333,7 @@
             },
             "opacity": {
               "condition": {
-                "test": "datum.state == 'Labuan' || datum.state == 'Putrajaya'",
+                "test": "datum.state == 'Labuan' || datum.state == 'Putrajaya'|| datum.state == 'Selangor'|| datum.state == 'Sabah'|| datum.state == 'Sarawak'|| datum.state == 'Johor'|| datum.state == 'Kelantan'",
                 "value": 1
               },
               "value": 0
