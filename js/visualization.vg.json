@@ -1,0 +1,296 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  
+  "data": {
+    "url": "data/cleaned_cases_state.csv"
+  },
+  "transform": [
+    {
+      "lookup": "state",
+      "from": {
+        "data": {
+          "url": "js/malaysia_states.topojson",
+          "format": {
+            "type": "topojson",
+            "feature": "states"
+          }
+        },
+        "key": "properties.Name"
+      },
+      "as": "geo"
+    },
+    {
+      "filter": "datum.year == Year_selection && datum.month == Month_selection && datum.day == Day_selection"
+    }
+  ],
+  "params": [
+    {
+      "name": "Year_selection",
+      "value": 2022,
+      "bind": {
+        "input": "range",
+        "min": 2020,
+        "max": 2022,
+        "step": 1,
+        "name": "Year:  "
+      }
+    },
+    {
+      "name": "Month_selection",
+      "value": 10,
+      "bind": {
+        "input": "range",
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "name": "Month:  "
+      }
+    },
+    {
+      "name": "Day_selection",
+      "value": 5,
+      "bind": {
+        "input": "range",
+        "min": 1,
+        "max": 31,
+        "step": 1,
+        "name": "Day:  "
+      }
+    }
+  ],
+  "vconcat": [{
+    "title": "Active Cases Per Day",
+  "width": 900,
+  "height": 500,
+  
+  "projection": {
+    "type": "equirectangular"
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "js/malaysia_states.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "'Data is not available in ' + datum.properties.Name",
+          "as": "note"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#ddd",
+        "stroke": "white",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "tooltip": {
+          "field": "note"
+        }
+      }
+    },
+    {
+      
+      "params": [
+        {
+          "name": "State_selection",
+          "select": {
+            "type": "point",
+            "fields": [
+              "state"
+            ]
+          },
+          "bind": {
+            "input": "select",
+            "options": [
+              null,
+              "Johor",
+              "Kedah",
+              "Kelantan",
+              "Melaka",
+              "Negeri Sembilan",
+              "Pahang",
+              "Perak",
+              "Perlis",
+              "Penang",
+              "Sabah",
+              "Sarawak",
+              "Selangor",
+              "Terengganu",
+              "Kuala Lumpur",
+              "Labuan",
+              "Putrajaya"
+            ],
+            "labels": [
+              "Show All",
+              "Johor",
+              "Kedah",
+              "Kelantan",
+              "Melaka",
+              "Negeri Sembilan",
+              "Pahang",
+              "Perak",
+              "Perlis",
+              "Penang",
+              "Sabah",
+              "Sarawak",
+              "Selangor",
+              "Terengganu",
+              "Kuala Lumpur",
+              "Labuan",
+              "Putrajaya"
+            ],
+            "name": "States Selection: "
+          }
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#fff",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "shape": {
+          "field": "geo",
+          "type": "geojson"
+        },
+        "color": {
+          "field": "cases_active",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              10,
+              100,
+              200,
+              1000
+            ],
+            "scheme": "reds"
+          },
+          "legend": {
+            "format": ".2s"
+          },
+          "title": "Active Cases"
+        },
+        "opacity": {
+          "condition": {
+            "param": "State_selection",
+            "value": 1
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "cases_active",
+            "type": "quantitative",
+            "title": "Active Cases"
+          },
+          {
+            "field": "date",
+            "type": "ordinal",
+            "title": "Date"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "data/cleaned_cases_state.csv"
+      },
+      "transform": [
+        {
+          "lookup": "state",
+          "from": {
+            "data": {
+              "url": "js/malaysia_states.topojson",
+              "format": {
+                "type": "topojson",
+                "feature": "states"
+              }
+            },
+            "key": "properties.Name"
+          },
+          "as": "geo"
+        },
+        {
+          "filter": "datum.year == Year_selection && datum.month == Month_selection && datum.day == Day_selection"
+        }
+      ],
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "cases_active",
+            "type": "quantitative",
+            "title": "Active Cases"
+          },
+          {
+            "field": "date",
+            "type": "ordinal",
+            "title": "Date"
+          }
+        ]
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "point",
+            "color": "lightblue",
+            "size": 70
+          },
+          "encoding": {
+            "opacity": {
+              "condition": {
+                "test": "datum.state == 'Labuan' || datum.state == 'Putrajaya'",
+                "value": 1
+              },
+              "value": 0
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "color": "black",
+            "dy": 9,
+            "dx": -25
+          },
+          "encoding": {
+            "text": {
+              "field": "state",
+              "type": "nominal"
+            },
+            "opacity": {
+              "condition": {
+                "test": "datum.state == 'Labuan' || datum.state == 'Putrajaya'",
+                "value": 1
+              },
+              "value": 0
+            }
+          }
+        }
+      ]
+    }
+  ]}
+]
+}

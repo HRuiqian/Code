@@ -1,0 +1,225 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "",
+  "width": 900,
+  "height": 400,
+  "data": {
+    "url": "js/malaysia_states.topojson",
+    "format": {
+      "type": "topojson",
+      "feature": "states"
+    }
+  },
+
+  "projection": {
+    "type": "equirectangular"
+  },
+  
+  "layer": [
+    {
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white",
+        "fill": "lightgray"
+      }
+    },
+    {
+      "transform": [
+        {
+          "lookup": "properties.Name",
+          "from": {
+            "data": {
+              "url": "data/cleaned_cases_state.csv"
+            },
+            "key": "state",
+            "fields": [
+              "state",
+              "cases_active",
+              "lon",
+              "lat",
+              "day",
+              "month",
+              "year"
+            ]
+          }
+        },
+        {
+          "calculate": "datum.cases_active",
+          "as": "Active Cases"
+        }
+      ],
+      "params": [
+        {
+          "name": "State_selection",
+          "select": {
+            "type": "point",
+            "fields": [
+              "state"
+            ]
+          },
+          "bind": {
+            "input": "select",
+            "options": [
+              null,
+              "Johor",
+              "Kedah",
+              "Kelantan",
+              "Melaka",
+              "Negeri Sembilan",
+              "Pahang",
+              "Perak",
+              "Perlis",
+              "Penang",
+              "Sabah",
+              "Sarawak",
+              "Selangor",
+              "Terengganu",
+              "Kuala Lumpur",
+              "Labuan",
+              "Putrajaya"
+            ],
+            "labels": [
+              "Show All",
+              "Johor",
+              "Kedah",
+              "Kelantan",
+              "Melaka",
+              "Negeri Sembilan",
+              "Pahang",
+              "Perak",
+              "Perlis",
+              "Penang",
+              "Sabah",
+              "Sarawak",
+              "Selangor",
+              "Terengganu",
+              "Kuala Lumpur",
+              "Labuan",
+              "Putrajaya"
+            ],
+            "name": "States Selection: "
+          }
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white"
+      },
+      "encoding": {
+        "color": {
+          "field": "Active Cases",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "scheme": "reds"
+          },
+          "title": "Active Cases"
+        },
+        "opacity": {
+          "condition": {
+            "param": "State_selection",
+            "value": 1
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "properties.Name",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "Active Cases",
+            "type": "quantitative"
+          }
+        ]
+      }
+    },
+  
+    {
+      "transform": [
+        {
+          "lookup": "properties.Name",
+          "from": {
+            "data": {
+              "url": "data/cleaned_cases_state.csv"
+            },
+            "key": "state",
+            "fields": [
+              "state",
+              "cases_active",
+              "lon",
+              "lat",
+              "day",
+              "month",
+              "year"
+            ]
+          }
+        },
+        {
+          "calculate": "datum.cases_active",
+          "as": "Active Cases"
+        }
+      ],
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "tooltip": [
+          {
+            "field": "properties.Name",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "Active Cases",
+            "type": "quantitative"
+          }
+        ]
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "point",
+            "color": "lightblue",
+            "size": 70
+
+          },
+          "encoding": {"opacity": {
+            "condition": {
+              "test": "datum['properties.Name'] == 'Labuan' || datum['properties.Name'] == 'Putrajaya'",
+              "value": 1
+            },
+            "value": 0}
+        }
+          
+        },
+        {
+          "mark": {
+            "type": "text",
+            "color": "black",
+            "dy": 9,
+            "dx": -25
+          },
+          "encoding": {
+            "text": {
+              "field": "properties.Name",
+              "type": "nominal"
+            },
+            "opacity": {
+              "condition": {
+                "test": "datum['properties.Name'] == 'Labuan' || datum['properties.Name'] == 'Putrajaya'",
+                "value": 1
+              },
+              "value": 0}
+          }
+        }
+      ]
+    }
+  ]
+}

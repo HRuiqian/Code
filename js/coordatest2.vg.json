@@ -1,0 +1,89 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "data/cleaned_deaths_state.csv"
+  },
+  "hconcat": [
+    {
+      "width": 450,
+      "height": 250,
+      "transform": [
+        {
+          "filter": "datum.state=='Selangor' ||datum.state=='Johor' || datum.state=='Kedah' || datum.state=='Kelantan' || datum.state=='Melaka' || datum.state=='Negeri Sembilan' || datum.state=='Pahang' || datum.state=='Perak' || datum.state=='Perlis'"
+        }
+      ],
+      "encoding": {
+        "y": {
+          "field": "state",
+          "type": "nominal"
+        },
+        "x": {
+          "aggregate": "sum",
+          "field": "deaths_new",
+          "type": "quantitative"
+        }
+      },
+      "layer": [
+        {
+          "mark": {"type":"bar"
+        }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "dx": 3
+          },
+          "encoding": {
+            "text": {
+              "aggregate": "sum",
+              "field": "deaths_new",
+              "type": "quantitative"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 450,
+      "height": 250,
+      "transform": [
+        {
+          "filter": "datum.state=='Penang' || datum.state=='Sabah' || datum.state=='Sarawak' || datum.state=='Selangor' || datum.state=='Terengganu' || datum.state=='Kuala Lumpur' || datum.state=='Labuan' || datum.state=='Putrajaya'"
+        }
+      ],
+      "encoding": {
+        "y": {
+          "field": "state",
+          "type": "nominal"
+        },
+        "x": {
+          "aggregate": "sum",
+          "field": "deaths_new",
+          "type": "quantitative"
+        }
+      },
+      "layer": [
+        {
+          "mark": "bar"
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "dx": 3
+          },
+          "encoding": {
+            "text": {
+              "aggregate": "sum",
+              "field": "deaths_new",
+              "type": "quantitative"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

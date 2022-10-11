@@ -1,0 +1,430 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "data/cleaned_deaths_state.csv"
+  },
+  "vconcat": [
+    {
+      "width": 925,
+      "height": 250,
+      "transform": [
+        {
+          "filter": {
+            "param": "brush"
+          }
+        },
+        {
+          "aggregate": [
+            {
+              "op": "sum",
+              "field": "deaths_new",
+              "as": "total_deaths_per_state"
+            }
+          ],
+          "groupby": [
+            "state"
+          ]
+        },
+        {
+          "joinaggregate": [
+            {
+              "op": "sum",
+              "field": "total_deaths_per_state",
+              "as": "total_deaths"
+            }
+          ]
+        },
+        {
+          "calculate": "datum.total_deaths/16",
+          "as": "avg_death_per_state"
+        }
+      ],
+      "encoding": {
+        "x": {
+          "field": "state",
+          "type": "nominal",
+          "title": null,
+          "sort": [
+            "Kuala Lumpur",
+            "Putrajaya",
+            "Perlis",
+            "Kedah",
+            "Kelantan"
+          ],
+          "axis": {
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "total_deaths_per_state",
+          "type": "quantitative",
+          "title": "Number of Deaths",
+          "axis": {
+            "grid": false
+          }
+        },
+        "color": {
+          "condition": [
+            {
+              "test": "datum.total_deaths_per_state==0",
+              "value": "lightgreen"
+            },
+            {
+              "test": "datum.total_deaths_per_state>=0 && datum.total_deaths_per_state<=100 ",
+              "value": "purple"
+            }
+          ],
+          "value": "Black"
+        }
+      },
+      "layer": [
+        {
+          "params": [
+            {
+              "name": "highlight",
+              "select": {
+                "type": "point",
+                "on": "mouseover"
+              }
+            }
+          ],
+          "mark": {
+            "type": "bar",
+            "size": 15
+          },
+          "encoding": {
+            "opacity": {
+              "condition": {
+                "param": "highlight",
+                "value": 1
+              },
+              "value": 0.5
+            },
+            "tooltip": [
+              {
+                "field": "state",
+                "type": "nominal",
+                "title": "State"
+              },
+              {
+                "field": "total_deaths_per_state",
+                "type": "quantitative",
+                "title": "Total deaths for selected timeline",
+                "format": ","
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "circle",
+            "size": 500
+          },
+          "encoding": {
+            "opacity": {
+              "condition": {
+                "param": "highlight",
+                "value": 1
+              },
+              "value": 0.5
+            },
+            "tooltip": [
+              {
+                "field": "state",
+                "type": "nominal",
+                "title": "State"
+              },
+              {
+                "field": "total_deaths_per_state",
+                "type": "quantitative",
+                "title": "Total deaths for selected timeline",
+                "format": ","
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "baseline": "middle",
+            "dy": -15
+          },
+          "encoding": {
+            "text": {
+              "field": "total_deaths_per_state",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "field": "state",
+                "type": "nominal",
+                "title": "State"
+              },
+              {
+                "field": "total_deaths_per_state",
+                "type": "quantitative",
+                "title": "Total deaths for selected timeline",
+                "format": ","
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "tick",
+            "size": 70
+          },
+          "encoding": {
+            "y": {
+              "field": "avg_death_per_state",
+              "type": "quantitative"
+            },
+            "color": {
+              "value": "red"
+            },
+            "tooltip": [
+              {
+                "field": "avg_death_per_state",
+                "type": "quantitative",
+                "title": "Average Deaths Per State",
+                "format": ".0f"
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "baseline": "middle",
+            "align": "left",
+            "dy": -6,
+            "dx": 45,
+            "fontSize": 12,
+            "fontStyle": "italic",
+            "opacity": 0.1
+          },
+          "encoding": {
+            "text": {
+              "value": [
+                "Average Deaths ",
+                "Per State: "
+              ]
+            },
+            "x": {
+              "value": 0
+            },
+            "y": {
+              "field": "avg_death_per_state"
+            },
+            "color": {
+              "value": "red"
+            },
+            "tooltip": [
+              {
+                "field": "avg_death_per_state",
+                "type": "quantitative",
+                "title": "Average Deaths Per State",
+                "format": ".0f"
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "baseline": "middle",
+            "align": "left",
+            "dy": 9,
+            "dx": 100,
+            "fontSize": 12,
+            "fontStyle": "italic",
+            "opacity": 0.1
+          },
+          "encoding": {
+            "text": {
+              "field": "avg_death_per_state",
+              "type": "quantitative",
+              "format": ".0f"
+            },
+            "x": {
+              "value": 0
+            },
+            "y": {
+              "field": "avg_death_per_state"
+            },
+            "color": {
+              "value": "red"
+            },
+            "tooltip": [
+              {
+                "field": "avg_death_per_state",
+                "type": "quantitative",
+                "title": "Average Deaths Per State",
+                "format": ".0f"
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "baseline": "middle",
+            "align": "left",
+            "dy": 20,
+            "dx": 210,
+            "fontSize": 15,
+            "opacity": 0.1
+          },
+          "encoding": {
+            "text": {
+              "field": "total_deaths",
+              "type": "quantitative"
+            },
+            "x": {
+              "value": 0
+            },
+            "y": {
+              "value": 0
+            },
+            "color": {
+              "value": "black"
+            },
+            "tooltip": [
+              {
+                "field": "total_deaths",
+                "type": "quantitative",
+                "title": "Total Deaths",
+                "format": ".0f"
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "baseline": "middle",
+            "align": "left",
+            "dy": 20,
+            "dx": 45,
+            "fontSize": 15,
+            "opacity": 0.1
+          },
+          "encoding": {
+            "text": {"value": ["Total Combined Deaths:"]},
+            "x": {
+              "value": 0
+            },
+            "y": {
+              "value": 0
+            },
+            "color": {
+              "value": "black"
+            },
+            "tooltip": [
+              {
+                "field": "total_deaths",
+                "type": "quantitative",
+                "title": "Total Deaths",
+                "format": ".0f"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "width": 900,
+      "height": 60,
+      "layer": [
+        {
+          "mark": "line",
+          "params": [
+            {
+              "name": "brush",
+              "select": {
+                "type": "interval",
+                "encodings": [
+                  "x"
+                ]
+              }
+            }
+          ],
+          "encoding": {
+            "x": {
+              "field": "date",
+              "type": "temporal",
+              "timeUnit": "yearmonthdate",
+              "axis": {
+                "title": "Use above timeline as an interval filter",
+                "titleFontStyle": "italic",
+                "titleColor": "grey",
+                "titleFontWeight": "lighter"
+              }
+            },
+            "y": {
+              "aggregate": "sum",
+              "field": "deaths_new",
+              "type": "quantitative",
+              "axis": {
+                "tickCount": 3,
+                "grid": false
+              },
+              "title": null
+            },
+            "tooltip": [{
+              "field": "date",
+              "type": "temporal",
+              "title": "Date"
+            },
+          {
+            "aggregate": "sum",
+              "field": "deaths_new",
+              "type": "quantitative",
+              "title": "Total Deaths"
+          }]
+          }
+        },
+        {
+          "mark": {
+            "type": "rule",
+            "size": 1
+          },
+          "transform": [
+            {
+              "filter": {
+                "param": "brush"
+              }
+            }
+          ],
+          "encoding": {
+            "y": {
+              "field": "deaths_new",
+              "aggregate": "average"
+            },
+            "color": {
+              "value": "red"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "center",
+            "baseline": "middle",
+            "dx": 40,
+            "dy": -30,
+            "fontSize": 13,
+            "fontStyle": "italic"
+          },
+          "transform": [
+            {
+              "filter": {
+                "param": "brush"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

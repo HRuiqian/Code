@@ -1,0 +1,51 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "data/cleaned_cases_malaysia.csv"
+  },
+  "width": 700,
+  "height": 350,
+  "layer": [
+    {
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal",
+          "title": null
+        },
+        "y": {
+          "field": "total_cases",
+          "type": "quantitative",
+          "title": "Total Cummulative Cases"
+        }
+      },
+      "layer": [{"mark": "line"},
+      {"transform": [{"filter": {"param": "hover", "empty": false}}], "mark": "point"}
+    ]
+    },
+    {
+      "mark": "rule",
+      "encoding": {
+        "opacity": {
+          "condition": {"value": 0.3, "param": "hover", "empty": false},
+          "value": 0
+        },
+
+        "tooltip": [
+          {"field": "date", "type": "temporal"},
+          {"field": "total_cases", "type": "quantitative"}
+        ]
+      },
+      "params": [{
+        "name": "hover",
+        "select": {
+          "type": "point",
+          "fields": ["date"],
+          "nearest": true,
+          "on": "mouseover",
+          "clear": "mouseout"
+        }
+      }]
+    }
+  ]
+}

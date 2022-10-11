@@ -1,0 +1,546 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "data/cleaned_vax.csv"
+  },
+  "hconcat": [
+    {
+      "width": 700,
+      "height": 300,
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal",
+          "axis": {
+            "grid": false,
+            "title": null
+          }
+        }
+      },
+      "layer": [
+        {
+          "params": [
+            {
+              "name": "State_selection",
+              "select": {
+                "type": "point",
+                "fields": [
+                  "state"
+                ]
+              },
+              "bind": {
+                "input": "select",
+                "options": [
+                  null,
+                  "Johor",
+                  "Kedah",
+                  "Kelantan",
+                  "Melaka",
+                  "Negeri Sembilan",
+                  "Pahang",
+                  "Perak",
+                  "Perlis",
+                  "Penang",
+                  "Sabah",
+                  "Sarawak",
+                  "Selangor",
+                  "Terengganu",
+                  "Kuala Lumpur",
+                  "Labuan",
+                  "Putrajaya"
+                ],
+                "labels": [
+                  "Every State",
+                  "Johor",
+                  "Kedah",
+                  "Kelantan",
+                  "Melaka",
+                  "Negeri Sembilan",
+                  "Pahang",
+                  "Perak",
+                  "Perlis",
+                  "Penang",
+                  "Sabah",
+                  "Sarawak",
+                  "Selangor",
+                  "Terengganu",
+                  "Kuala Lumpur",
+                  "Labuan",
+                  "Putrajaya"
+                ],
+                "name": "States Selection: "
+              }
+            }
+          ],
+          "transform": [
+            {
+              "filter": {
+                "param": "State_selection"
+              }
+            }
+          ],
+          "mark": {
+            "type": "tick",
+            "opacity": 0.8
+          },
+          "encoding": {
+            "y": {
+              "field": "dose",
+              "type": "nominal",
+              "axis": {
+                "title": "Types of Dose"
+              },
+              "sort": [
+                "1st Dose",
+                "2nd Dose",
+                "1st Booster",
+                "2nd Booster"
+              ]
+            },
+            "size": {
+              "field": "daily_vac",
+              "type": "quantitative",
+              "legend": null,
+              "scale": {
+                "rangeMax": 70
+              }
+            },
+            "color": {
+              "field": "dose",
+              "type": "nominal",
+              "sort": "ascending",
+              "scale": {
+                "range": [
+                  "#00946d",
+                  "violet",
+                  "#fded22",
+                  "orange",
+                  "violet",
+                  "orange",
+                  "#00946d",
+                  "#fded22",
+                  "lightgrey",
+                  "lightgrey",
+                  "lightgrey",
+                  "lightgrey"
+                ]
+              },
+              "title": "Type of Dose",
+              "legend": {
+                "offset": -125,
+                "rowPadding": 6,
+                "values": [
+                  "1st Dose",
+                  "2nd Dose",
+                  "1st Booster",
+                  "2nd Booster"
+                ]
+              }
+            },
+            "tooltip": [
+              {
+                "field": "state",
+                "type": "nominal",
+                "title": "Region"
+              },
+              {
+                "field": "dose",
+                "type": "nominal",
+                "title": "Dose Type"
+              },
+              {
+                "field": "date",
+                "type": "temporal",
+                "title": "Date"
+              },
+              {
+                "field": "daily_vac",
+                "type": "quantitative",
+                "title": "Number of Vaccinations",
+                "format": ","
+              }
+            ]
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": {
+                "param": "State_selection"
+              }
+            },
+            {
+              "pivot": "dose",
+              "value": "daily_vac",
+              "groupby": [
+                "date"
+              ]
+            }
+          ],
+          "mark": {
+            "type": "rule",
+            "strokeDash": [
+              2,
+              2
+            ]
+          },
+          "encoding": {
+            "opacity": {
+              "condition": {
+                "value": 0.3,
+                "param": "hover",
+                "empty": false
+              },
+              "value": 0
+            },
+            "tooltip": [
+              {
+                "field": "date",
+                "type": "temporal",
+                "title": "Date"
+              },
+              {
+                "field": "1st Dose",
+                "type": "quantitative",
+                "format": ","
+              },
+              {
+                "field": "2nd Dose",
+                "type": "quantitative",
+                "format": ","
+              },
+              {
+                "field": "1st Booster",
+                "type": "quantitative",
+                "format": ","
+              },
+              {
+                "field": "2nd Booster",
+                "type": "quantitative",
+                "format": ","
+              }
+            ]
+          },
+          "params": [
+            {
+              "name": "hover",
+              "select": {
+                "type": "point",
+                "fields": [
+                  "date"
+                ],
+                "nearest": true,
+                "on": "mouseover",
+                "clear": "mouseout"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "vconcat": [
+        {
+          "width": 175,
+          "height": 85,
+          "mark": "bar",
+          "encoding": {
+            "opacity": {
+              "value": 0
+            }
+          }
+        },
+        {
+          "width": 175,
+          "data": {
+            "url": "data/cleaned_pop_vax_unvax_1st.csv"
+          },
+          "transform": [
+            {
+              "filter": {
+                "param": "State_selection"
+              }
+            }
+          ],
+          "layer": [
+            {
+              "mark": {
+                "type": "bar",
+                "innerRadius": 50
+              },
+              "encoding": {
+                "x": {
+                  "aggregate": "sum",
+                  "field": "1st Dose",
+                  "stack": "normalize",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "color": {
+                  "field": "no_type",
+                  "type": "ordinal"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "color": "black",
+                "fontWeight": "bold",
+                "fontSize": 15
+              },
+              "encoding": {
+                "text": {
+                  "aggregate": "mean",
+                  "field": "percentage",
+                  "type": "quantitative",
+                  "format": ".0%"
+                },
+                "tooltip": [
+                  {
+                    "field": "vax_dose",
+                    "type": "ordinal",
+                    "title": "Dose Type"
+                  },
+                  {
+                    "aggregate": "sum",
+                    "field": "pop2",
+                    "type": "quantitative",
+                    "title": "Total Population",
+                    "format": ","
+                  },
+                  {
+                    "aggregate": "mean",
+                    "field": "percentage",
+                    "type": "quantitative",
+                    "format": ".2%",
+                    "title": "Estimated % of Population Vaccinated"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "width": 175,
+          "data": {
+            "url": "data/cleaned_pop_vax_unvax_2nd.csv"
+          },
+          "transform": [
+            {
+              "filter": {
+                "param": "State_selection"
+              }
+            }
+          ],
+          "layer": [
+            {
+              "mark": {
+                "type": "bar",
+                "innerRadius": 50
+              },
+              "encoding": {
+                "x": {
+                  "aggregate": "sum",
+                  "field": "2nd Dose",
+                  "stack": "normalize",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "color": {
+                  "field": "no_type2",
+                  "type": "ordinal"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "color": "black",
+                "fontWeight": "bold",
+                "fontSize": 15
+              },
+              "encoding": {
+                "text": {
+                  "aggregate": "mean",
+                  "field": "percentage2",
+                  "type": "quantitative",
+                  "format": ".0%"
+                },
+                "tooltip": [
+                  {
+                    "field": "vax_dose2",
+                    "type": "ordinal",
+                    "title": "Dose Type"
+                  },
+                  {
+                    "aggregate": "sum",
+                    "field": "pop2",
+                    "type": "quantitative",
+                    "title": "Total Population",
+                    "format": ","
+                  },
+                  {
+                    "aggregate": "mean",
+                    "field": "percentage2",
+                    "type": "quantitative",
+                    "format": ".2%",
+                    "title": "Estimated % of Population Vaccinated"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "width": 175,
+          "data": {
+            "url": "data/cleaned_pop_vax_unvax_3rd.csv"
+          },
+          "transform": [
+            {
+              "filter": {
+                "param": "State_selection"
+              }
+            }
+          ],
+          "layer": [
+            {
+              "mark": {
+                "type": "bar",
+                "innerRadius": 50
+              },
+              "encoding": {
+                "x": {
+                  "aggregate": "sum",
+                  "field": "1st Booster",
+                  "stack": "normalize",
+                  "type": "quantitative",
+                  "axis": null
+                },
+                "color": {
+                  "field": "no_type3",
+                  "type": "ordinal"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "color": "black",
+                "fontWeight": "bold",
+                "fontSize": 15
+              },
+              "encoding": {
+                "text": {
+                  "aggregate": "mean",
+                  "field": "percentage3",
+                  "type": "quantitative",
+                  "format": ".0%"
+                },
+                "tooltip": [
+                  {
+                    "field": "vax_dose3",
+                    "type": "ordinal",
+                    "title": "Dose Type"
+                  },
+                  {
+                    "aggregate": "sum",
+                    "field": "pop2",
+                    "type": "quantitative",
+                    "title": "Total Population",
+                    "format": ","
+                  },
+                  {
+                    "aggregate": "mean",
+                    "field": "percentage3",
+                    "type": "quantitative",
+                    "format": ".2%",
+                    "title": "Estimated % of Population Vaccinated"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "width": 175,
+          "data": {
+            "url": "data/cleaned_pop_vax_unvax_4th.csv"
+          },
+          "transform": [
+            {
+              "filter": {
+                "param": "State_selection"
+              }
+            }
+          ],
+          "layer": [
+            {
+              "mark": {
+                "type": "bar",
+                "innerRadius": 50
+              },
+              "encoding": {
+                "x": {
+                  "aggregate": "sum",
+                  "field": "2nd Booster",
+                  "stack": "normalize",
+                  "type": "quantitative",
+                  "axis": {
+                    "labelExpr": "datum.value*100 + '%'"
+                  },
+                  "title": [
+                    "Estimated % of",
+                    "Population Vaccinated"
+                  ]
+                },
+                "color": {
+                  "field": "no_type4",
+                  "type": "ordinal"
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "color": "black",
+                "fontWeight": "bold",
+                "fontSize": 15
+              },
+              "encoding": {
+                "text": {
+                  "aggregate": "mean",
+                  "field": "percentage4",
+                  "type": "quantitative",
+                  "format": ".1%"
+                },
+                "tooltip": [
+                  {
+                    "field": "vax_dose4",
+                    "type": "ordinal",
+                    "title": "Dose Type"
+                  },
+                  {
+                    "aggregate": "sum",
+                    "field": "pop2",
+                    "type": "quantitative",
+                    "title": "Total Population",
+                    "format": ","
+                  },
+                  {
+                    "aggregate": "mean",
+                    "field": "percentage4",
+                    "type": "quantitative",
+                    "format": ".2%",
+                    "title": "Estimated % of Population Vaccinated"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
